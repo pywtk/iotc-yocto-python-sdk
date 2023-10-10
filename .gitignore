@@ -5,3 +5,5 @@ credentials.json
 *.crt
 *.key
 
+meta-my-iotc-python-sdk-example/recipes-apps/iotc-telemetry-demo/files/iotconnect
+.vscode
