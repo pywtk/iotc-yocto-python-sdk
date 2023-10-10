@@ -93,6 +93,7 @@ class JsonDevice(ConnectedDevice):
     # attributes is a list of attributes brought in from json
     # the DynAttr class holds the metadata only, E.g. where the value is saved as a file - the attribute itself is set on the class
     # in the override of the super get_state()
+    parsed_json: dict = {}
 
     def __init__(self, conf_file):
         parsed_json: dict = parse_json_for_config(conf_file)
@@ -109,6 +110,9 @@ class JsonDevice(ConnectedDevice):
             parsed_json[ToSDK.Credentials.sdk_id],
             parsed_json[ToSDK.Credentials.sdk_options]
         )
+        # make accessible to any inheriting classes
+        self.parsed_json = parsed_json
+
 
     def get_state(self):
         '''Do not override'''

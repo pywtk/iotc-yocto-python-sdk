@@ -81,6 +81,7 @@ class FromJSON:
             name = "IOTC_AT_TPM"
 
     class Device:
+        scripts_path = "scripts_path"
         """Human readable Enum for to mapping credential's device object json format, including subclasses"""
         class OfflineStorage:
             name = "offline_storage"
@@ -113,6 +114,8 @@ def parse_json_for_config(path_to_json) -> dict:
     c[ToSDK.Credentials.environment] = get(j, FromJSON.Keys.environment)
     c[ToSDK.Credentials.sdk_id] = get(j, FromJSON.Keys.sdk_id)
     c[ToSDK.Credentials.iotc_server_cert] = get(j, FromJSON.Keys.iotc_server_cert)
+
+    c[ToSDK.Credentials.script_path] = get(get(j, FromJSON.Keys.device), FromJSON.Device.scripts_path)
 
     c[ToSDK.Credentials.sdk_options] = get_sdk_options(j)
     c[ToSDK.Credentials.attributes] = parse_device_attributes(j)
