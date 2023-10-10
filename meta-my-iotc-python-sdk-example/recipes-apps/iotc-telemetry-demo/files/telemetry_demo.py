@@ -11,7 +11,7 @@ def main(argv):
     '''Main function'''
     
     CREDENTIALS_PATH = argv[1:][0]
-    device = JsonDevice(CREDENTIALS_PATH)
+    device = CommandDevice(CREDENTIALS_PATH)
     device.connect()
 
     while True:
