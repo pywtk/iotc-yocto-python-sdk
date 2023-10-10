@@ -12,3 +12,5 @@ meta-my-iotc-python-sdk-example/recipes-apps/iotc-telemetry-demo/files/certs/Dev
 credentialsLocal.json
 meta-my-iotc-python-sdk-example/recipes-apps/iotc-telemetry-demo/files/eg-private-repo-data/config.json
 meta-my-iotc-python-sdk-example/recipes-apps/iotc-telemetry-demo/files/eg-private-repo-data/configLocal.json
+meta-my-iotc-python-sdk-example/recipes-apps/iotc-telemetry-demo/files/iotconnect
+.vscode
