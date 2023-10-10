@@ -124,6 +124,8 @@ def parse_json_for_config(path_to_json) -> dict:
     if os.path.isdir(path) is False:
         raise FileNotFoundError("PATH: " + path + " Does not exist, check path")
 
+    c[ToSDK.Credentials.script_path] = get(get(j, FromJSON.Keys.device), FromJSON.Device.scripts_path)
+
     c[ToSDK.Credentials.sdk_options] = get_sdk_options(j)
     c[ToSDK.Credentials.attributes] = parse_device_attributes(j)
 

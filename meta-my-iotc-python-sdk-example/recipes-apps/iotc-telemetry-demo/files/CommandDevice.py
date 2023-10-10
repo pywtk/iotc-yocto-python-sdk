@@ -1,13 +1,25 @@
+"""Showcase cloud commands that execute scripts"""
 from enum import Enum
+from JsonParser import ToSDK
 import sys
 from Enums import Enums as E
 from JsonDevice import JsonDevice
 sys.path.append("iotconnect")
 from typing import Union # to use Union[Enum, None] type hint
 
+
 import subprocess
 
 class CommandDevice(JsonDevice):
+
+    SCRIPTS_PATH:str = ""
+    scripts: list = []
+
+    def __init__(self, conf_file):
+        super().__init__(conf_file)
+        self.SCRIPTS_PATH = self.parsed_json[ToSDK.Credentials.script_path]
+        self.get_all_scripts()
+
     class DeviceCommands(Enum):
         ECHO = "echo "
         LED = "led "
@@ -21,6 +33,9 @@ class CommandDevice(JsonDevice):
                     if (sliced := full_command[:len(dc)]) == dc:
                         return cls(sliced)
             return None
+
+    def get_all_scripts(self):
+        self.scripts: list = [f for f in os.listdir(self.SCRIPTS_PATH) if os.path.isfile(os.path.join(self.SCRIPTS_PATH, f))]
 
     def device_cb(self,msg):
         # Only handles messages with E.Values.Commands.DEVICE_COMMAND (also known as CMDTYPE["DCOMM"])
