@@ -1,6 +1,6 @@
 #!/bin/bash
 
-led_path="/home/akarnil/Documents/Work/iotc-yocto-python-sdk/meta-my-iotc-python-sdk-example/recipes-apps/iotc-telemetry-demo/files/fake-led"
+led_path="/tmp/fake-led"
 
 # Check if the user provided an argument
 if [ $# -ne 1 ]; then
