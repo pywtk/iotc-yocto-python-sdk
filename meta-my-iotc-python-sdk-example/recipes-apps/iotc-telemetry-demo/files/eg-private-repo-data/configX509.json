@@ -13,7 +13,7 @@
         }
     },
     "device": {
-        "commands_list_path": "/usr/local/bin/iotc/scripts",
+        "commands_list_path": "/usr/bin/local/iotc/scripts",
         "offline_storage": {
             "available_space_MB": 1,
             "file_count": 1
