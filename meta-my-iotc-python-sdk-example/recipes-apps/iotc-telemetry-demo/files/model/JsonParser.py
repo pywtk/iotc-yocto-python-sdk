@@ -19,6 +19,7 @@ class ToSDK:
         sdk_options = auto()
         attributes = auto()
         iotc_server_cert = auto()
+        commands_list_path = auto()
 
     class Attributes(Enum):
         name = auto()
@@ -57,6 +58,7 @@ class FromJSON:
         device = "device"
         sdk_ver = "sdk_ver"
         iotc_server_cert = "iotc_server_cert"
+        commands_list_path = "commands_list_path"
 
     class Auth:
         """Human readable Enum for to mapping credential's auth object json format, including subclasses"""
@@ -115,6 +117,7 @@ def parse_json_for_config(path_to_json) -> dict:
     c[ToSDK.Credentials.sdk_id] = get(j, FromJSON.Keys.sdk_id)
     c[ToSDK.Credentials.iotc_server_cert] = get(j, FromJSON.Keys.iotc_server_cert)
 
+    c[ToSDK.Credentials.commands_list_path] = get(get(j,FromJSON.Keys.device), FromJSON.Keys.commands_list_path)
 
     c[ToSDK.Credentials.sdk_options] = get_sdk_options(j)
     c[ToSDK.Credentials.attributes] = parse_device_attributes(j)

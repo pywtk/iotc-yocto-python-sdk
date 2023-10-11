@@ -9,3 +9,4 @@ meta-my-iotc-python-sdk-example/recipes-apps/iotc-telemetry-demo/files/iotconnec
 .vscode
 meta-my-iotc-python-sdk-example/recipes-apps/iotc-telemetry-demo/files/certs/device.key
 meta-my-iotc-python-sdk-example/recipes-apps/iotc-telemetry-demo/files/certs/DeviceCertificate.pem
+credentialsLocal.json
