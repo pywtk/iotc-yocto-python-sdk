@@ -65,5 +65,5 @@ do_install() {
 
     # Add dummy sensor files
    echo 1 > ${D}${APP_INSTALL_DIR}/dummy_sensor_power
-   echo 2 > ${D}${APP_INSTALL_DIR}/dummy_sensor_local
+   echo 2 > ${D}${APP_INSTALL_DIR}/dummy_sensor_level
 }
