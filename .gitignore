@@ -10,3 +10,5 @@ meta-my-iotc-python-sdk-example/recipes-apps/iotc-telemetry-demo/files/iotconnec
 meta-my-iotc-python-sdk-example/recipes-apps/iotc-telemetry-demo/files/certs/device.key
 meta-my-iotc-python-sdk-example/recipes-apps/iotc-telemetry-demo/files/certs/DeviceCertificate.pem
 credentialsLocal.json
+meta-my-iotc-python-sdk-example/recipes-apps/iotc-telemetry-demo/files/eg-private-repo-data/config.json
+meta-my-iotc-python-sdk-example/recipes-apps/iotc-telemetry-demo/files/eg-private-repo-data/configLocal.json
