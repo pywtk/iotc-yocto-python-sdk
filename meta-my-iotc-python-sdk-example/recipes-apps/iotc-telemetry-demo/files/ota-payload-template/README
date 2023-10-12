@@ -1,0 +1,4 @@
+Provided are two folders and the installer script `install.sh`
+contents inside folder `application` are used to replace contents inside `/usr/bin/local/iotc`
+contents inside folder `local_data`  are used to replace contents inside `/usr/local/iotc`
+
