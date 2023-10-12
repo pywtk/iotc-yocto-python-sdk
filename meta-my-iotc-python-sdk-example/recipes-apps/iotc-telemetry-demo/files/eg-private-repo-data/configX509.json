@@ -8,8 +8,8 @@
     "auth": {
         "auth_type": "IOTC_AT_X509",
             "params": {
-                "client_key": "/path/to/device.key",
-                "client_cert": "/path/to/DeviceCertificate.pem"
+                "client_key": "/path/to/device.key eg. /usr/bin/local/iotc/certs/device.key",
+                "client_cert": "/path/to/DeviceCertificate.pem eg. /usr/bin/local/iotc/certs/DeviceCertificate.pem"
         }
     },
     "device": {
