@@ -5,7 +5,7 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3 -u /usr/bin/local/iotc/telemetry_demo.py /usr/local/iotc/credentials.json
+ExecStart=/usr/bin/python3 -u /usr/bin/local/iotc/telemetry_demo.py /usr/local/iotc/config.json
 Restart=always
 StandardOutput=journal+console
 StandardError=journal+console

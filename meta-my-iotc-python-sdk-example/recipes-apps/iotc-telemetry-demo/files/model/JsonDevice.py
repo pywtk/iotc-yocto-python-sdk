@@ -170,7 +170,9 @@ class JsonDevice(ConnectedDevice):
         command: list = full_command.split(' ')
         enum_command = self.DeviceCommands.get(command[0])
         
-
+        # If you need to implement other hardcoded commands
+        # add the command name to the DeviceCommands enum
+        # and check against it here (see the EXEC command below)
 
         # Execute bash scripts or bash commands that use exec
         if enum_command == self.DeviceCommands.EXEC:
