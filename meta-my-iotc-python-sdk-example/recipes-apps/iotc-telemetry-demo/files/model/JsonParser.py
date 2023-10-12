@@ -119,8 +119,9 @@ def parse_json_for_config(path_to_json) -> dict:
     c[ToSDK.Credentials.sdk_id] = get(j, FromJSON.Keys.sdk_id)
     c[ToSDK.Credentials.iotc_server_cert] = get(j, FromJSON.Keys.iotc_server_cert)
 
-    c[ToSDK.Credentials.commands_list_path], path = get(get(j,FromJSON.Keys.device), FromJSON.Keys.commands_list_path)
-    if os.path.isfile(path) is False:
+    c[ToSDK.Credentials.commands_list_path] = get(get(j,FromJSON.Keys.device), FromJSON.Keys.commands_list_path)
+    path = c[ToSDK.Credentials.commands_list_path]
+    if os.path.isdir(path) is False:
         raise FileNotFoundError("PATH: " + path + " Does not exist, check path")
 
     c[ToSDK.Credentials.sdk_options] = get_sdk_options(j)
@@ -167,7 +168,9 @@ def parse_device_attributes(j:json):
             a = {}
             a[ToSDK.Attributes.name] = get(attribute, FromJSON.Device.Attributes.Children.name)
             a[ToSDK.Attributes.private_data_type] = get(attribute, FromJSON.Device.Attributes.Children.private_data_type)
-            a[ToSDK.Attributes.private_data], path = get(attribute, FromJSON.Device.Attributes.Children.private_data)
+            a[ToSDK.Attributes.private_data] = get(attribute, FromJSON.Device.Attributes.Children.private_data)
+
+            path = a[ToSDK.Attributes.private_data]
             if os.path.isfile(path) is False:
                 raise FileNotFoundError("PATH: " + path + " Does not exist, check path")
 
