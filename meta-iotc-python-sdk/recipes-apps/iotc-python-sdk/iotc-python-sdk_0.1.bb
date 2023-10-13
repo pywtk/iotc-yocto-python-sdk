@@ -24,17 +24,24 @@ DISTUTILS_SETUP_PATH = "${WORKDIR}/git/iotconnect-sdk-1.0"
 # NOTE: no Makefile found, unable to determine what needs to be done
 inherit setuptools3
 
-RDEPENDS_${PN} += " python3-ntplib"
-RDEPENDS_${PN} += " python3-paho-mqtt"
-RDEPENDS_${PN} += " jsonlib-python3"
-RDEPENDS_${PN} += " python3-pip"
+#RDEPENDS:${PN} += " python3-ntplib"
+#RDEPENDS:${PN} += " python3-paho-mqtt"
+#RDEPENDS:${PN} += " jsonlib-python3"
+#RDEPENDS:${PN} += " python3-pip"
 
-do_configure () {
+RDEPENDS:${PN} += " \
+	python3-pip \
+	python3-ntplib \
+	python3-paho-mqtt \
+    python3-wheel \
+	"
+
+distutils_do_configure () {
 	# Specify any needed configure commands here
 	:
 }
 
-do_compile () {
+distutils_do_compile () {
 	# Specify compilation commands here
 	:
 }
