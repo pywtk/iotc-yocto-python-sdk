@@ -7,6 +7,7 @@ import struct
 from model.DeviceModel import ConnectedDevice
 from model.JsonParser import parse_json_for_config, ToSDK
 from model.Enums import Enums as E
+from model.ota_handler import OtaHandler
 
 
 class DynAttr:
@@ -157,6 +158,10 @@ class JsonDevice(ConnectedDevice):
         '''Overrideable - return dictionary of local data to send to the cloud'''
         #print("no class-defined object properties")
         return {}
+    
+    def ota_cb(self,msg):
+        OtaHandler(self,msg)
+
     
     def get_all_scripts(self):
         if not self.SCRIPTS_PATH.endswith('/'):

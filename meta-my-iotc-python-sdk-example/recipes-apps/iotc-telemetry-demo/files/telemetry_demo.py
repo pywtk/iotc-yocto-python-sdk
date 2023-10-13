@@ -15,6 +15,10 @@ def main(argv):
     device.connect()
 
     while True:
+        if device.needs_exit and not device.in_ota:
+            print("OTA requested exit, exiting")
+            break
+
         data_sent = device.send_device_states()
         print(data_sent)
         time.sleep(10)
