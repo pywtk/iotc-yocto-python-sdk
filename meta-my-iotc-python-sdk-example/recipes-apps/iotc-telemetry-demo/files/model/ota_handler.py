@@ -99,73 +99,8 @@ class OtaHandler:
                 process_output: bytes = process.stdout if process_success else process.stderr
                 
                 ack_message = str(process_output, 'UTF-8')
-                print(ack_message)
                 self.send_ack(msg, ack, ack_message)
                 self.device.needs_exit = True
 
                 shutil.rmtree(OTA_DOWNLOAD_DIRECTORY, ignore_errors=True)
                 return
-
-    #         self.ota_backup_primary()
-    #         try:
-    #             self.ota_extract_to_a_and_move_old_a_to_b(payload_filename)
-    #             self.device.needs_exit  = True
-    #         except:
-    #             self.ota_restore_primary()
-    #             self.send_ack(data, E.Values.OtaStat.FAILED, "OTA FAILED to install")
-    #             self.device.needs_exit  = False
-    #             raise
-
-    #         if self.device.needs_exit:
-    #             self.ota_delete_primary_backup()
-    #             self.send_ack(data, E.Values.OtaStat.SUCCESS, "OTA SUCCESS")
-    #             return
-
-    #     self.send_ack(data, E.Values.OtaStat.FAILED, "OTA FAILED,invalid payload")
-
-
-
-    # @staticmethod
-    # def ota_extract_to_a_and_move_old_a_to_b(tarball_name:str):
-    #     """Extract OTA tarball and assign to primary, move old primary to secondary"""
-    #     # extract tarball to new directory
-    #     file = tarfile.open(AP.main_app_dir + AP.tarball_download_dir + tarball_name)
-    #     file.extractall(AP.main_app_dir + AP.tarball_extract_dir)
-    #     file.close()
-
-    #     # rm secondary dir
-    #     path = AP.main_app_dir + AP.secondary_app_dir
-    #     shutil.rmtree(path, ignore_errors=True)
-
-    #     # move primary to secondary
-    #     os.rename(AP.main_app_dir + AP.primary_app_dir, AP.main_app_dir + AP.secondary_app_dir)
-
-    #     # copy extracted dir to primary dir
-    #     src = AP.main_app_dir + AP.tarball_extract_dir
-    #     dst = AP.main_app_dir + AP.primary_app_dir
-    #     shutil.copytree(src, dst)
-
-    #     # delete temp folders
-    #     shutil.rmtree(AP.main_app_dir + AP.tarball_download_dir, ignore_errors=True)
-    #     shutil.rmtree(AP.main_app_dir + AP.tarball_extract_dir, ignore_errors=True)
-
-    # @staticmethod
-    # def ota_backup_primary():
-    #     """Copy primary app folder for backup"""
-    #     src = AP.main_app_dir + AP.primary_app_dir
-    #     dst = AP.main_app_dir + AP.primary_app_backup_folder_name
-
-    #     if os.path.exists(dst):
-    #         shutil.rmtree(dst, ignore_errors=True)
-    #     shutil.copytree(src, dst)
-
-    # @staticmethod
-    # def ota_restore_primary():
-    #     """Delete faulty primary app folder and replace with backup"""
-    #     shutil.rmtree(AP.main_app_dir + AP.primary_app_dir, ignore_errors=True)
-    #     os.rename(AP.main_app_dir + AP.primary_app_backup_folder_name, AP.main_app_dir + AP.primary_app_dir)
-
-    # @staticmethod
-    # def ota_delete_primary_backup():
-    #     """Delete primary app backup folder"""
-    #     shutil.rmtree(AP.main_app_dir + AP.primary_app_backup_folder_name, ignore_errors=True)
