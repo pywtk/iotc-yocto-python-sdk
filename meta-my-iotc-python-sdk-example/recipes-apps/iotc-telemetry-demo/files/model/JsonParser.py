@@ -29,7 +29,7 @@ class ToSDK:
         private_data_type = auto()
 
     class SdkOptions:
-        """Human readable Enum for to mapping SDK's sdkOptions format"""
+        """Enum for to mapping SDK's sdkOptions format"""
         class Certificate:
             name = "certificate"
             class Children:
@@ -51,7 +51,7 @@ class FromJSON:
         Class of Enums that are related to the JSON config side
     '''
     class Keys:
-        """Human readable Enum for to mapping credential's json format"""
+        """Enum for to mapping credential's json format"""
         unique_id = "duid"
         company_id = "cpid"
         environment = "env"
@@ -63,7 +63,7 @@ class FromJSON:
         commands_list_path = "commands_list_path"
 
     class Auth:
-        """Human readable Enum for to mapping credential's auth object json format, including subclasses"""
+        """Enum for to mapping credential's auth object json format, including subclasses"""
         type = "auth_type"
         params = "params"
 
@@ -85,8 +85,8 @@ class FromJSON:
             name = "IOTC_AT_TPM"
 
     class Device:
-        scripts_path = "scripts_path"
-        """Human readable Enum for to mapping credential's device object json format, including subclasses"""
+        scripts_path = "commands_list_path"
+        """Enum for to mapping credential's device object json format, including subclasses"""
         class OfflineStorage:
             name = "offline_storage"
             class Children:
@@ -94,7 +94,7 @@ class FromJSON:
                 file_count = "file_count"
 
         class Attributes:
-            """Human readable Enum for to mapping credential's attributes objects json format, including subclasses"""
+            """Enum for to mapping credential's attributes objects json format, including subclasses"""
             name = "attributes"
             class Children:
                 name = "name"
@@ -124,7 +124,7 @@ def parse_json_for_config(path_to_json) -> dict:
     if os.path.isdir(path) is False:
         raise FileNotFoundError("PATH: " + path + " Does not exist, check path")
 
-    c[ToSDK.Credentials.script_path] = get(get(j, FromJSON.Keys.device), FromJSON.Device.scripts_path)
+    c[ToSDK.Credentials.commands_list_path] = get(get(j, FromJSON.Keys.device), FromJSON.Device.scripts_path)
 
     c[ToSDK.Credentials.sdk_options] = get_sdk_options(j)
     c[ToSDK.Credentials.attributes] = parse_device_attributes(j)
