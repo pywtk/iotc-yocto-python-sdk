@@ -1,7 +1,9 @@
 #!/bin/bash
 
-application_payload_dir="./application/"
-local_data_payload_dir="./local_data/"
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+application_payload_dir="$SCRIPT_DIR/application/"
+local_data_payload_dir="$SCRIPT_DIR/local_data/"
 
 # Source directory to be backed up
 application_installed_dir="/usr/bin/local/iotc/"
