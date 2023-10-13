@@ -12,26 +12,24 @@ run_app() {
 }
 
 SECONDARY_EXISTS=false
-SECONDARY_PATH=$app_B_dir$app_name
-if [ -e "${SECONDARY_PATH}" ]; then
+if [ -e "$app_B_dir$app_name" ]; then
     SECONDARY_EXISTS=true
 fi
 
 PRIMARY_EXISTS=false
-PRIMARY_PATH=$app_A_dir$app_name
-if [ -e "${PRIMARY_PATH}" ]; then
+if [ -e "$$app_A_dir$app_name" ]; then
     PRIMARY_EXISTS=true
 fi
 
-if [ "${PRIMARY_EXISTS}"] && [ "${SECONDARY_EXISTS}" ]; then
+if [ "$PRIMARY_EXISTS" = true ] && [ "$SECONDARY_EXISTS" = true ]; then
     echo "Primary and Secondary exist, running"
     run_app $app_A_dir$app_name $config_A_dir$config_name || (echo "Primary app has failed, trying backup" && run_app $app_B_dir$app_name $config_B_dir$config_name)
 
-elif [ "${PRIMARY_EXISTS}" ]; then
+elif [ "$PRIMARY_EXISTS" = true ]; then
     echo "Only Primary exists, running"
     run_app $app_A_dir$app_name $config_A_dir$config_name
 
-elif [ "${SECONDARY_EXISTS}" ]; then
+elif [ "$SECONDARY_EXISTS" = true ]; then
     echo "Only Secondary exists, running"
     run_app $app_B_dir$app_name $config_B_dir$config_name 
 
