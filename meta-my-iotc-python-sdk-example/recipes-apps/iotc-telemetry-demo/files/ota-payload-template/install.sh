@@ -9,52 +9,48 @@ local_data_installed_dir="/usr/local/iotc/"
 application_backup_dir="${application_installed_dir::-1}.backup/"
 local_data_backup_dir="${local_data_installed_dir::-1}.backup/"
 
-# tuples=("$application_installed_dir $application_backup_dir" "$local_data_installed_dir $local_data_backup_dir")
-# for tuple in "${tuples[@]}"; do
-#     eval "tuple=($tuple)"
-#     installed_dir="${tuple[0]}"
-#     backup_dir="${tuple[1]}"
+tuples=("$application_installed_dir $application_backup_dir" "$local_data_installed_dir $local_data_backup_dir")
+for tuple in "${tuples[@]}"; do
+    eval "tuple=($tuple)"
+    installed_dir="${tuple[0]}"
+    backup_dir="${tuple[1]}"
 
-#         if [ -d "$backup_dir" ]; then
-#             echo "Removing existing backup... at $backup_dir"
-#             rm -r "$backup_dir"
-#         fi
+    if [ -d "$backup_dir" ]; then
+        echo "Removing existing backup... at $backup_dir"
+        rm -r "$backup_dir"
+    fi
 
-#         echo "Creating backup directories at $backup_dir"
-#         mkdir -p "$backup_dir"
+    echo "Creating backup directories at $backup_dir"
+    mkdir -p "$backup_dir"
 
-#         echo "backing up  $installed_dir to $backup_dir"
-#         cp -r "$installed_dir" "$backup_dir"
-# done
+    echo "Backing up $installed_dir to $backup_dir"
+    cp -a "$installed_dir". "$backup_dir"
 
-# Initialize an empty array to store the file names
-file_array=()
-
-# Check if the folder exists
-folder=$application_payload_dir
-if [ -d "$folder" ]; then
-    # Use the find command to search for files (not directories) recursively
-    while IFS= read -r -d '' file; do
-        if [ ! -d "$file" ]; then
-            file_array+=("$file")
-        fi
-    done < <(find "$folder" -type f -print0)
-else
-    echo "Folder not found."
-fi
-
-# Display the list of files in the array
-for file in "${file_array[@]}"; do
-    echo "$file"
+    # replace paths in backed up config etc to use new backup directory
+    if [ -d "$backup_dir" ]; then
+        echo "Replacing paths in $backup_dir"
+        find "$backup_dir" -type f -print | while read -r file; do
+            sed -i "s|$installed_dir|$backup_dir|g" "$file"
+        done
+    else
+        echo "$backup_dir not found."
+    fi
 done
 
+tuples=("$application_installed_dir $application_payload_dir" "$local_data_installed_dir $local_data_payload_dir")
+for tuple in "${tuples[@]}"; do
+    eval "tuple=($tuple)"
+    to_install_dir="${tuple[0]}"
+    payload_dir="${tuple[1]}"
 
-# # Check if the source file exists
-# if [ -e "$source_file" ]; then
-#     # Replace the destination file with the source file
-#     cp -f "$source_file" "$destination_file"
-#     echo "File replaced successfully."
-# else
-#     echo "Source file does not exist, no replacement performed."
-# fi
+    echo "Moving and overwriting payload from $payload_dir to $to_install_dir"
+    cp -a $payload_dir. $to_install_dir
+done
 
+# Check if the write was successful
+if [ $? -eq 0 ]; then
+    echo "install.sh completed successfully."
+else
+    >&2 echo "install.sh encountered errors."
+    exit 1
+fi
