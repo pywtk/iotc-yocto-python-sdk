@@ -8,6 +8,7 @@ SRC_URI = "file://telemetry_demo.py \
     file://eg-private-repo-data \
     file://scripts \
     file://certs \
+    file://iotc-application.sh \
 "
 
 APP_INSTALL_DIR = "${base_prefix}/usr/bin/local/iotc"
@@ -15,6 +16,9 @@ PRIVATE_DATA_DIR = "${base_prefix}/usr/local/iotc"
 
 FILES_${PN}-dev = "${PRIVATE_DATA_DIR}/* \
 "
+
+FILES_${PN} +=  "${ROOT_HOME}/ " \
+                "${ROOT_HOME}/iotc-application.sh "
 
 do_install() {
     install -d ${D}${APP_INSTALL_DIR}
@@ -52,6 +56,9 @@ do_install() {
 
     # Install main app
     install -m 0755 ${WORKDIR}/telemetry_demo.py ${D}${APP_INSTALL_DIR}/
+    
+    install -d ${D}/${ROOT_HOME}/
+    install -m 0755 ${WORKDIR}/iotc-application.sh ${D}${ROOT_HOME}
 
     for f in ${WORKDIR}/eg-private-repo-data/*
     do
