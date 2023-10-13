@@ -12,12 +12,14 @@ run_app() {
 }
 
 SECONDARY_EXISTS=false
-if [ -e "$app_B_dir$app_name" ]; then
+SECONDARY_PATH=$app_B_dir$app_name
+if [ -e "$SECONDARY_PATH" ]; then
     SECONDARY_EXISTS=true
 fi
 
 PRIMARY_EXISTS=false
-if [ -e "$$app_A_dir$app_name" ]; then
+PRIMARY_PATH=$app_A_dir$app_name
+if [ -e "$PRIMARY_PATH" ]; then
     PRIMARY_EXISTS=true
 fi
 
