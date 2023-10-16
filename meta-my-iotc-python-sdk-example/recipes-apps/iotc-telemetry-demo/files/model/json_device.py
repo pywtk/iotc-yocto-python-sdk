@@ -4,9 +4,9 @@ from typing import Union # to use Union[Enum, None] type hint
 from enum import Enum
 import subprocess
 import struct
-from model.DeviceModel import ConnectedDevice
-from model.JsonParser import parse_json_for_config, ToSDK
-from model.Enums import Enums as E
+from model.device_model import ConnectedDevice
+from model.json_parser import parse_json_for_config, ToSDK
+from model.enums import Enums as E
 from model.ota_handler import OtaHandler
 
 

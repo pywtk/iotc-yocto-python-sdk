@@ -7,9 +7,9 @@ import shutil
 import subprocess
 
 from urllib.request import urlretrieve
-from .DeviceModel import ConnectedDevice
+from model.device_model import ConnectedDevice
 
-from .Enums import Enums as E
+from model.enums import Enums as E
 # from model.app_paths import AppPaths as AP
 
 
