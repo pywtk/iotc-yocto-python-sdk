@@ -35,13 +35,14 @@ meta-my-iotc-python-sdk-example/
 │       │   ├── eg-private-repo-data <--------- Location for certificates/keys & other config data for development purposes.
 │       │   │   ├── configSymmrcKy.json
 │       │   │   ├── configX509.json
-│       │   ├── model <------------------------ directory of support sources
+│       │   ├── model <------------------------ Directory of support sources
 │       │   │   ├── device_model.py
 │       │   │   ├── enums.py
 │       │   │   ├── json_device.py
-│       │   │   ├── ota_handler.py
+│       │   │   ├── ota_handler.py <----------- Handling OTA logic application side
 │       │   │   └── json_parser.py
-│       │   └── telemetry_demo.py <------------ top level python source.
+│       │   ├── iotc-application.sh <---------- Application launcher for A/B system updates
+│       │   └── telemetry_demo.py <------------ Top level python source.
 │       └── iotc-telemetry-demo_0.1.bb <------- Recipe
 └── recipes-systemd
     └── iotc-telemetry-demo-service <---------- Example of a systemd service designed to start telemetry on boot (disabled by default)
@@ -178,3 +179,13 @@ To include the layers within a yocto environment:
 1. Login into the device & run the command `/usr/bin/local/iotc/telemetry-demo.py /usr/local/iotc/config.json`
 
 ## Board specific examples can be found [here](board_specific_readmes/README.md)
+
+# OTA
+
+  This demo showcases OTA update functionality, it involves three new components,
+  1. `iotc-application.sh` which is used to run the telemetry demo, it also contains mechanisms to execute a fallback version of the telemetry demo in case of erroneous OTA.
+
+  1. `ota-handler.py` which includes all functionality to download and execute the OTA payload.
+
+  1. The OTA payload, a tarball including all files to update the application, the structure of the payload can be found [here](/meta-my-iotc-python-sdk-example/recipes-apps/iotc-telemetry-demo/files/ota-payload-template/README)
+
