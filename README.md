@@ -70,6 +70,8 @@ Within config.json there is an object called `device` which has a child called `
 
 By editing these members you should be able to send data from your device to avnet.iotconnect.io again with no edits. (You may need to get your sensor data into a file, or it may already be in that form).
 
+Note that the systemd service or the application launcher expect the config to be stored in `/usr/local/iotc/config.json`
+
 <details>
   <summary>JSON Config More Info</summary>
   The config json provides a quick and easy way to provide a user's executable with the requisite device credentials for any connection and a convenient method of mapping sensors to iotc device attributes. The demo source provided will match an `attribute.name` to a path on the user's host where the relevant sensor data resides. It also indicates to the demo what format to expect the data at the path to be in.
@@ -189,3 +191,13 @@ To include the layers within a yocto environment:
 
   1. The OTA payload, a tarball including all files to update the application, the structure of the payload can be found [here](/meta-my-iotc-python-sdk-example/recipes-apps/iotc-telemetry-demo/files/ota-payload-template/README)
 
+
+Instructions for performing OTA update,
+1. Generate OTA payload [(see here)](/meta-my-iotc-python-sdk-example/recipes-apps/iotc-telemetry-demo/files/ota-payload-template/README) as a `.tar.gz`
+1. At the [Firmware](https://avnet.iotconnect.io/firmware/1) tab of the IoTConnect dashboard, press [Create Firmware](https://avnet.iotconnect.io/firmware/1/add)
+1. Fill out `Name`, `Version`, `Template` (must match to the device's), `File` (Upload the OTA payload), Once complete click on `Save`
+1. Return to the [Firmware](https://avnet.iotconnect.io/firmware/1) tab, find your named Firmware in the table, Under the `Software Upgrades` column, select the `Number` under `Draft`.
+1. Select your software version OTA package and press the `Green Icon` ![Green Icon](https://avnet.iotconnect.io/static/media/trailDraftFirmware.9f0c096d.svg) (for the purposes of this demo we will only send a Test OTA).
+1. Select the device you want to send the OTA to in the `Device` drop down and press `Update`.
+1. The device will get the OTA update the next time it connects, depending on the content of the OTA, it may continue without needing a reboot, if the `systemd` service is enabled, then it will automatically restart post OTA, otherwise the application will require to be manually restarted.
+1. The outcome of the OTA will be transmitted back as an Acknowledgement in the `OTA Update History` table, clicking on on a `Status` number will further explain the status of the performed OTA. 
