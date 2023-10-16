@@ -16,7 +16,7 @@ SRC_URI = "git://git@github.com/avnet-iotconnect/iotc-python-sdk.git;protocol=ss
 
 # Modify these as desired
 PV = "1.0+git${SRCPV}"
-SRCREV = "dc94de8c037384eae355259926f3edbf6e9b83a3"
+SRCREV = "083e0b74390775e12295fe7703c056ba10bdef90"
 
 S = "${WORKDIR}/git/iotconnect-sdk-1.0"
 DISTUTILS_SETUP_PATH = "${WORKDIR}/git/iotconnect-sdk-1.0"
