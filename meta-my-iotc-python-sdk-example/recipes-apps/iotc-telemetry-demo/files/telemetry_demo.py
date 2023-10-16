@@ -4,7 +4,7 @@
 '''
 import time
 import sys
-from model.JsonDevice import JsonDevice
+from model.json_device import JsonDevice
 
 
 def main(argv):
