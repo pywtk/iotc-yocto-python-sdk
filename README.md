@@ -22,7 +22,7 @@ meta-iotc-python-sdk/
 ### `meta-my-iotc-python-sdk-example`
 This layer provides an example of how a user might write a recipe suitable for their application. It contains a simple application that demonstrates telemetry. Once installed on the image it can be started by logging in & executing `/usr/bin/local/iotc/telemetry-demo.py /path/to/config.json` where `config.json` is a file that contains device authentication information and paths to where telemetry-demo will read data from on the host device. It's expected that in the 1st instance a user would run this demo on their hardware after editing a sample `config.json` to reflect a device they've defined on avnet.iotconnect.io and sensor data particular to their hardware.
 
-By adding the recipe to your image (e.g. `IMAGE_INSTALL += " iotc-telemetry-demo"` in `conf/local.conf`) you will via dependancy include `iotc-python-sdk` from `meta-iotc-python-sdk`
+By adding the recipe to your image (e.g. `IMAGE_INSTALL += " iotc-telemetry-demo"` in `conf/local.conf`) you will via dependency include `iotc-python-sdk` from `meta-iotc-python-sdk`
 
 ```
 iotc-yocto-python-sdk$ tree meta-my-iotc-python-sdk-example/
@@ -36,20 +36,21 @@ meta-my-iotc-python-sdk-example/
 │       │   │   ├── configSymmrcKy.json
 │       │   │   ├── configX509.json
 │       │   ├── model <------------------------ directory of support sources
-│       │   │   ├── DeviceModel.py
-│       │   │   ├── Enums.py
-│       │   │   ├── JsonDevice.py
-│       │   │   └── JsonParser.py
+│       │   │   ├── device_model.py
+│       │   │   ├── enums.py
+│       │   │   ├── json_device.py
+│       │   │   ├── ota_handler.py
+│       │   │   └── json_parser.py
 │       │   └── telemetry_demo.py <------------ top level python source.
 │       └── iotc-telemetry-demo_0.1.bb <------- Recipe
 └── recipes-systemd
-    └── iotc-telemetry-demo-service <---------- Example of a systemd service designed to start telemtry on boot (disabled by default)
+    └── iotc-telemetry-demo-service <---------- Example of a systemd service designed to start telemetry on boot (disabled by default)
         ├── files
         │   └── iotc-telemetry-demo.service
         └── iotc-telemetry-demo-service_git.bb
 ```
 
-As developing a iotc application involves the use of private/secure data like keys/certificates and the user is expected to develop same application using SCM like git, it's worth taking a moment to be aware of risks of accidentlally uploading private data to places it should not belong. The directory `eg-priviate-repo-data` seeks to provide a safe space to place sensitive data like device keys etc for development purposes only. When the user installs the _development_ version of the recipe (e.g. `IMAGE_INSTALL += " iotc-telemetry-demo-dev"` in `conf/local.conf`) any files within `eg-private-repo-data` will be installed in the rootfs of the image. The `.gitignore` settings for this repo are also configured to prevent accidental upload of *.pem or *.crt files.
+As developing a iotc application involves the use of private/secure data like keys/certificates and the user is expected to develop same application using SCM like git, it's worth taking a moment to be aware of risks of accidentally uploading private data to places it should not belong. The directory `eg-private-repo-data` seeks to provide a safe space to place sensitive data like device keys etc for development purposes only. When the user installs the _development_ version of the recipe (e.g. `IMAGE_INSTALL += " iotc-telemetry-demo-dev"` in `conf/local.conf`) any files within `eg-private-repo-data` will be installed in the rootfs of the image. The `.gitignore` settings for this repo are also configured to prevent accidental upload of *.pem or *.crt files.
 
 This approach allows the user to develop their solution conveniently, then when it's time to provide production builds, the result would be a clean installation awaiting first time configuration post image flash.
 
@@ -171,7 +172,7 @@ To include the layers within a yocto environment:
 1. add them to `conf/bblayers` file in your build directory
 1. add the recipes to your build target e.g. add `IMAGE_INSTALL += " iotc-telemetry-demo-dev"` to the bottom of `build/conf/local.conf`
 1. using the config.json files in `eg-private-repo-data` as a template, create your own config.json with details of the device you have setup on iotconnect.io.
-1. editing the same json as in the last step, edit the `attributes` section of the JSON so the `name` of the attritube maps to a path on your system where the relevant data can be found e.g. the path to the position data of an I2C accelerometer might be: `/sys/bus/i2c/devices/1-0053/position`.
+1. editing the same json as in the last step, edit the `attributes` section of the JSON so the `name` of the attribute maps to a path on your system where the relevant data can be found e.g. the path to the position data of an I2C accelerometer might be: `/sys/bus/i2c/devices/1-0053/position`.
 1. build with a bitbake call e.g. `./bitbake core-image-base`
 1. Flash the resultant image to the device.
 1. Login into the device & run the command `/usr/bin/local/iotc/telemetry-demo.py /usr/local/iotc/config.json`
