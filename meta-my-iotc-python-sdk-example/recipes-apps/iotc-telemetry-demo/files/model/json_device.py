@@ -7,7 +7,6 @@ import struct
 from model.device_model import ConnectedDevice
 from model.json_parser import parse_json_for_config, ToSDK
 from model.enums import Enums as E
-from model.ota_handler import OtaHandler
 
 
 class DynAttr:
@@ -160,6 +159,7 @@ class JsonDevice(ConnectedDevice):
         return {}
     
     def ota_cb(self,msg):
+        from model.ota_handler import OtaHandler
         OtaHandler(self,msg)
 
     
