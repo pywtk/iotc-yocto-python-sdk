@@ -40,14 +40,15 @@ for tuple in "${tuples[@]}"; do
 done
 
 tuples=("$application_installed_dir $application_payload_dir" "$local_data_installed_dir $local_data_payload_dir")
+echo "PAYLOADINSTALL START"
 for tuple in "${tuples[@]}"; do
     eval "tuple=($tuple)"
     to_install_dir="${tuple[0]}"
     payload_dir="${tuple[1]}"
 
-    echo "Moving and overwriting payload from $payload_dir to $to_install_dir"
     cp -va $payload_dir. $to_install_dir
 done
+echo "PAYLOADINSTALL END"
 
 # Check if the write was successful
 if [ $? -eq 0 ]; then

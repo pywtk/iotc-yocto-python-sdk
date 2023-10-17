@@ -5,12 +5,14 @@ import os
 import tarfile
 import shutil
 import subprocess
+from datetime import datetime
 
 from urllib.request import urlretrieve
 from model.json_device import JsonDevice
 
 from model.enums import Enums as E
 # from model.app_paths import AppPaths as AP
+import logging
 
 
 # OTA payload must be a single file of extension .tar.gz
@@ -23,16 +25,28 @@ OTA_DOWNLOAD_DIRECTORY = "/tmp/.ota/"
 OTA_INSTALL_SCRIPT = "install.sh"
 
 EXTENSIONS_THAT_REQUIRE_REBOOT = ['.py', '.json']
-
+OTA_LOG_DIRECTORY = "/var/log/ota/"
 
 class OtaHandler:
     '''Class for handling OTA'''
     device: JsonDevice = None
+    logfile:str = ""
+    logger = None
 
     def __init__(self, connected_device: JsonDevice, msg):
         self.device = connected_device
         self.device.in_ota = True
         self.device.needs_exit = False
+        
+        logging.basicConfig(filename= OTA_LOG_DIRECTORY + self.now() + "-" + "ota.log",
+                    filemode='a',
+                    format='%(asctime)s %(name)s %(levelname)s %(message)s',
+                    datefmt='%H:%M:%S',
+                    level=logging.DEBUG)
+
+        self.logger = logging.getLogger('OTA')
+        self.logger.info("Running OTA Update")
+
         self.ota_perform_update(msg)
 
     def __del__(self):
@@ -51,7 +65,10 @@ class OtaHandler:
         print(msg)
 
         if (command_type := E.get_value(msg, E.Keys.command_type)) != E.Values.Commands.FIRMWARE:
-            print("fail wrong command type, got " + str(command_type))
+            
+            message = "fail wrong command type, got " + str(command_type)
+            print(message)
+            self.logger.error(message)
             return
 
         valid_payload: bool = False
@@ -61,9 +78,12 @@ class OtaHandler:
             if ("url" in data["urls"][0]) and ("fileName" in data["urls"][0]):
                 if data["urls"][0]["fileName"].endswith(".gz"):
                     valid_payload = True
+                    self.logger.info(msg)
 
         if not valid_payload:
-            self.send_ack(data, E.Values.OtaStat.FAILED, "payload not valid, check file extension or url invalid")
+            message = "payload not valid, check file extension or url invalid"
+            self.send_ack(data, E.Values.OtaStat.FAILED, message)
+            self.logger.error(message)
             return
 
         # download tarball from url to download_dir
@@ -77,12 +97,18 @@ class OtaHandler:
             os.mkdir(OTA_DOWNLOAD_DIRECTORY)
 
         try:
-            self.send_ack(data, E.Values.OtaStat.DL_IN_PROGRESS, "downloading payload")
+            message = "downloading payload"
+            self.send_ack(data, E.Values.OtaStat.DL_IN_PROGRESS, message)
+            self.logger.info(message)
             urlretrieve(url, payload_path)
         except:
-            self.send_ack(data, E.Values.OtaStat.DL_FAILED, "payload download failed")
+            message = "payload download failed"
+            self.send_ack(data, E.Values.OtaStat.DL_FAILED, message)
+            self.logger.error(message)
             raise
-        self.send_ack(data, E.Values.OtaStat.DL_DONE, "payload downloaded")
+        message = "payload downloaded"
+        self.send_ack(data, E.Values.OtaStat.DL_DONE, message)
+        self.logger.info(message)
 
         try:
             file = tarfile.open(payload_path)
@@ -90,7 +116,10 @@ class OtaHandler:
             file.close()
         
         except tarfile.ExtractError:
-            self.send_ack(data, E.Values.OtaStat.FAILED, "Failed to extract OTA, aborting")
+            message = "Failed to extract OTA, aborting"
+            self.send_ack(data, E.Values.OtaStat.FAILED, message)
+            self.logger.error(message)
+
             shutil.rmtree(OTA_DOWNLOAD_DIRECTORY, ignore_errors=True)
             return
         
@@ -111,8 +140,13 @@ class OtaHandler:
                     commands_list_needs_updating = True
 
         if install_script_path is None:
-            self.send_ack(data, E.Values.OtaStat.FAILED, OTA_INSTALL_SCRIPT + " Not found in payload")
+            message = OTA_INSTALL_SCRIPT + " Not found in payload"
+            self.send_ack(data, E.Values.OtaStat.FAILED, message)
+            self.logger.error(message)
             return
+        
+        with open(install_script_path, "r", encoding="UTF-8") as install_script:
+            self.logger.info("install.sh contents\n%s", install_script.read())
 
         process = subprocess.run(install_script_path, check=False, capture_output=True)
         process_success:bool = (process.returncode == 0)
@@ -123,9 +157,20 @@ class OtaHandler:
         ack_message = str(process_output, 'UTF-8')
         self.send_ack(msg, ack, ack_message)
 
+        if not process_success:
+            self.logger.error("install.sh output\n%s",ack_message)
+        else:
+            self.logger.info("install.sh output\n%s",ack_message)
+
         if commands_list_needs_updating is True and requires_reboot is False:
             self.device.get_all_scripts()
+            self.logger.info("OTA in reboot-less mode")
         self.device.needs_exit = requires_reboot
 
         shutil.rmtree(OTA_DOWNLOAD_DIRECTORY, ignore_errors=True)
+        self.logger.info("Deleting OTA payload")
         return
+    
+    @staticmethod
+    def now():
+        return datetime.now().astimezone().strftime("%Y%m%dT%H%M%S%Z")
