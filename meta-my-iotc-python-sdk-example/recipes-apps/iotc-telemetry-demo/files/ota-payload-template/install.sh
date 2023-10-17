@@ -26,7 +26,7 @@ for tuple in "${tuples[@]}"; do
     mkdir -p "$backup_dir"
 
     echo "Backing up $installed_dir to $backup_dir"
-    cp -a "$installed_dir". "$backup_dir"
+    cp -va "$installed_dir". "$backup_dir"
 
     # replace paths in backed up config etc to use new backup directory
     if [ -d "$backup_dir" ]; then
@@ -46,7 +46,7 @@ for tuple in "${tuples[@]}"; do
     payload_dir="${tuple[1]}"
 
     echo "Moving and overwriting payload from $payload_dir to $to_install_dir"
-    cp -a $payload_dir. $to_install_dir
+    cp -va $payload_dir. $to_install_dir
 done
 
 # Check if the write was successful
