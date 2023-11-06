@@ -1,15 +1,17 @@
+####	*For a Quick Start initiation into IoTConnect, we recommend the [MaaxBoard-IoTC-Voyager-Demo](https://github.com/avnet-iotconnect/avnet-iotconnect.github.io/blob/main/documentation/iotc-yocto-c-sdk/voyager-demo/MaaxBoard-IoTC-Voyager-Demo.md). This pre-configured Yocto image facilitates a rapid onboarding of the MaaXBoard with IoTConnect, ensuring immediate data visibility in the cloud.
 ## MaaxBoard Example
- 
-Based on [this quickstart guide](https://www.avnet.com/wps/wcm/connect/onesite/35645cc9-4317-4ca0-a2fa-30cce5f9ff17/MaaXBoard-Mini-Linux-Yocto-Lite-Development_Guide-V1.0-EN.pdf?MOD=AJPERES) from [this page](https://www.avnet.com/wps/portal/us/products/avnet-boards/avnet-board-families/maaxboard/maaxboard?utm_source=hackster)
-      
-This example has been tested on Ubuntu 20.04 without issue.
+In this MaaXBoard Example, developers are guided on how to integrate the `meta-iotconnect` and `meta-myExampleIotconnectLayer` meta-layers into a Yocto build image. The aim is to expedite Linux development, allowing developers to focus on their unique applications rather than the intricacies of cloud connection.
+
+* Notes:
+	* Based on the MaaXBoard [Development Guide](https://www.avnet.com/wps/wcm/connect/onesite/35645cc9-4317-4ca0-a2fa-30cce5f9ff17/MaaXBoard-Mini-Linux-Yocto-Lite-Development_Guide-V1.0-EN.pdf?MOD=AJPERES) from [this page](https://www.avnet.com/wps/portal/us/products/avnet-boards/avnet-board-families/maaxboard/maaxboard?utm_source=hackster)
+	* Tested on Ubuntu 20.04 without issue.
 
 The final directory structure is shown below:
 ```bash
 $ tree -L 2 imx-yocto-bsp/
 imx-yocto-bsp/
 ├── maaxboard
-│   └── build
+│   └── build
 └── sources
     ├── base
     ├── meta-browser
