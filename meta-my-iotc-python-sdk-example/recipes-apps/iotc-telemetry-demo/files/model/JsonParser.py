@@ -1,6 +1,8 @@
 """Load a device json file from path and translate to format required for the SDK"""
 import json
 from enum import Enum, auto
+import os
+
 
 class ToSDK:
     '''
@@ -19,6 +21,7 @@ class ToSDK:
         sdk_options = auto()
         attributes = auto()
         iotc_server_cert = auto()
+        commands_list_path = auto()
 
     class Attributes(Enum):
         name = auto()
@@ -57,6 +60,7 @@ class FromJSON:
         device = "device"
         sdk_ver = "sdk_ver"
         iotc_server_cert = "iotc_server_cert"
+        commands_list_path = "commands_list_path"
 
     class Auth:
         """Human readable Enum for to mapping credential's auth object json format, including subclasses"""
@@ -81,6 +85,7 @@ class FromJSON:
             name = "IOTC_AT_TPM"
 
     class Device:
+        scripts_path = "scripts_path"
         """Human readable Enum for to mapping credential's device object json format, including subclasses"""
         class OfflineStorage:
             name = "offline_storage"
@@ -113,6 +118,11 @@ def parse_json_for_config(path_to_json) -> dict:
     c[ToSDK.Credentials.environment] = get(j, FromJSON.Keys.environment)
     c[ToSDK.Credentials.sdk_id] = get(j, FromJSON.Keys.sdk_id)
     c[ToSDK.Credentials.iotc_server_cert] = get(j, FromJSON.Keys.iotc_server_cert)
+
+    c[ToSDK.Credentials.commands_list_path] = get(get(j,FromJSON.Keys.device), FromJSON.Keys.commands_list_path)
+    path = c[ToSDK.Credentials.commands_list_path]
+    if os.path.isdir(path) is False:
+        raise FileNotFoundError("PATH: " + path + " Does not exist, check path")
 
     c[ToSDK.Credentials.sdk_options] = get_sdk_options(j)
     c[ToSDK.Credentials.attributes] = parse_device_attributes(j)
@@ -159,6 +169,11 @@ def parse_device_attributes(j:json):
             a[ToSDK.Attributes.name] = get(attribute, FromJSON.Device.Attributes.Children.name)
             a[ToSDK.Attributes.private_data_type] = get(attribute, FromJSON.Device.Attributes.Children.private_data_type)
             a[ToSDK.Attributes.private_data] = get(attribute, FromJSON.Device.Attributes.Children.private_data)
+
+            path = a[ToSDK.Attributes.private_data]
+            if os.path.isfile(path) is False:
+                raise FileNotFoundError("PATH: " + path + " Does not exist, check path")
+
             all_attributes.append(a)
 
     return all_attributes
@@ -180,6 +195,11 @@ def parse_auth(j: json):
         get_and_assign(params_o,child, FromJSON.Auth.X509.Children.client_key, ToSDK.SdkOptions.Certificate.Children.key_path)
         get_and_assign(params_o,child, FromJSON.Auth.X509.Children.client_cert, ToSDK.SdkOptions.Certificate.Children.cert_path)
         get_and_assign(j,child, FromJSON.Keys.iotc_server_cert, ToSDK.SdkOptions.Certificate.Children.root_cert_path)
+
+        for path in [val for val in child.values()]:
+            if os.path.isfile(path) is False:
+                raise FileNotFoundError("PATH: " + path + " Does not exist, check path credentials")
+
         temp[ToSDK.SdkOptions.Certificate.name] = child
 
     elif auth_type == FromJSON.Auth.Token.name:

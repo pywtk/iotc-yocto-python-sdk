@@ -8,12 +8,12 @@
     "auth": {
         "auth_type": "IOTC_AT_X509",
             "params": {
-                "client_key": "/path/to/device.key",
-                "client_cert": "/path/to/DeviceCertificate.pem"
+                "client_key": "/path/to/device.key eg. /usr/bin/local/iotc/certs/device.key",
+                "client_cert": "/path/to/DeviceCertificate.pem eg. /usr/bin/local/iotc/certs/DeviceCertificate.pem"
         }
     },
     "device": {
-        "commands_list_path": "Path to folder containing all commands",
+        "commands_list_path": "/usr/bin/local/iotc/scripts",
         "offline_storage": {
             "available_space_MB": 1,
             "file_count": 1

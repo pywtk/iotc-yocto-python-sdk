@@ -1,9 +1,13 @@
-from model.DeviceModel import ConnectedDevice
-
-from model.JsonParser import parse_json_for_config, ToSDK
+'''Device model using json credentials and supporting script commands'''
+import os
+from typing import Union # to use Union[Enum, None] type hint
+from enum import Enum
+import subprocess
 import struct
-
+from model.DeviceModel import ConnectedDevice
+from model.JsonParser import parse_json_for_config, ToSDK
 from model.Enums import Enums as E
+
 
 class DynAttr:
 
@@ -93,6 +97,20 @@ class JsonDevice(ConnectedDevice):
     # attributes is a list of attributes brought in from json
     # the DynAttr class holds the metadata only, E.g. where the value is saved as a file - the attribute itself is set on the class
     # in the override of the super get_state()
+    
+    parsed_json: dict = {}
+    SCRIPTS_PATH:str = ""
+    scripts: list = []
+
+    class DeviceCommands(Enum):
+        EXEC = "exec"
+
+        @classmethod
+        def get(cls, command:str) -> Union[Enum, None]:
+            '''Validates full command string against accepted enumerated commands'''
+            if command in [dc.value for dc in cls]:
+                    return cls(command)
+            return None
 
     def __init__(self, conf_file):
         parsed_json: dict = parse_json_for_config(conf_file)
@@ -109,6 +127,12 @@ class JsonDevice(ConnectedDevice):
             parsed_json[ToSDK.Credentials.sdk_id],
             parsed_json[ToSDK.Credentials.sdk_options]
         )
+        # make accessible to any inheriting classes
+        self.parsed_json = parsed_json
+
+        self.SCRIPTS_PATH = self.parsed_json[ToSDK.Credentials.commands_list_path]
+        self.get_all_scripts()
+
 
     def get_state(self):
         '''Do not override'''
@@ -133,4 +157,37 @@ class JsonDevice(ConnectedDevice):
         '''Overrideable - return dictionary of local data to send to the cloud'''
         #print("no class-defined object properties")
         return {}
+    
+    def get_all_scripts(self):
+        if not self.SCRIPTS_PATH.endswith('/'):
+            self.SCRIPTS_PATH += '/'
+        self.scripts: list = [f for f in os.listdir(self.SCRIPTS_PATH) if os.path.isfile(os.path.join(self.SCRIPTS_PATH, f))]
+
+
+    def device_cb(self,msg):
+        # Only handles messages with E.Values.Commands.DEVICE_COMMAND (also known as CMDTYPE["DCOMM"])
+        full_command = E.get_value(msg, E.Keys.device_command)
+        command: list = full_command.split(' ')
+        enum_command = self.DeviceCommands.get(command[0])
+        
+        # If you need to implement other hardcoded commands
+        # add the command name to the DeviceCommands enum
+        # and check against it here (see the EXEC command below)
+
+        # Execute bash scripts or bash commands that use exec
+        if enum_command == self.DeviceCommands.EXEC:
+            command.pop(0) #remove "exec" element
+
+        # if command exists in scripts folder append the folder path
+        if command[0] in self.scripts:
+            command[0] = self.SCRIPTS_PATH + command[0]
+
+        process = subprocess.run(command, check=False, capture_output=True)
+        process_success:bool = (process.returncode == 0)
+
+        ack = E.Values.AckStat.SUCCESS if process_success else E.Values.AckStat.FAIL
+        process_output: bytes = process.stdout if process_success else process.stderr
+        
+        ack_message = str(process_output, 'UTF-8')
+        self.send_ack(msg,ack, ack_message)
 
