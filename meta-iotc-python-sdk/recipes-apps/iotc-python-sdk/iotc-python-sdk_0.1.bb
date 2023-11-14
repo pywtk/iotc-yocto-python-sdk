@@ -9,8 +9,8 @@
 # this is not accurate with respect to the licensing of the software being built (it
 # will not be in most cases) you must specify the correct value before using this
 # recipe for anything other than initial testing/development!
-LICENSE = "GPL-3.0-only"
-LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/GPL-3.0-only;md5=c79ff39f19dfec6d293b95dea7b07891"
+LICENSE = "GPL-3.0"
+LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/GPL-3.0;md5=c79ff39f19dfec6d293b95dea7b07891"
 
 SRC_URI = "git://git@github.com/avnet-iotconnect/iotc-python-sdk.git;protocol=ssh;branch=master-std-21"
 
