@@ -20,7 +20,13 @@ meta-iotc-python-sdk/
 ```
 
 ### `meta-my-iotc-python-sdk-example`
-This layer provides an example of how a user might write a recipe suitable for their application. It contains a simple application that demonstrates telemetry. Once installed on the image it can be started by logging in & executing `/usr/bin/local/iotc/iotc-demo.py /path/to/config.json` where `config.json` is a file that contains device authentication information and paths to where demo will read data from on the host device. It's expected that in the 1st instance a user would run this demo on their hardware after editing a sample `config.json` to reflect a device they've defined on avnet.iotconnect.io and sensor data particular to their hardware.
+This layer provides an example of how a user might write a recipe suitable for their application. It contains a simple application that demonstrates telemetry and commands. Once installed on the image it can be started by logging in & executing `/usr/bin/local/iotc/iotc-demo.py /path/to/config.json` where `config.json` is a file that contains device authentication information and paths to where demo will read data from on the host device. It's expected that in the 1st instance a user would run this demo on their hardware after editing a sample `config.json` to reflect a device they've defined on avnet.iotconnect.io and sensor data particular to their hardware.
+
+As developing a iotc application involves the use of private/secure data like keys/certificates and the user is expected to develop same application using SCM like git, it's worth taking a moment to be aware of risks of accidentally uploading private data to places it should not belong.
+
+The directory `eg-private-repo-data` seeks to provide a safe space to place sensitive data like device keys etc __for development purposes only__. When the user installs the _development_ version of the recipe (e.g. `IMAGE_INSTALL += " iotc-demo-dev"` in `conf/local.conf`) any files or directoires within `eg-private-repo-data` will be installed in the rootfs of the image. The `.gitignore` settings for this repo are also configured to prevent accidental upload of *.pem or *.crt files.
+
+This approach allows the user to develop their solution conveniently, then when it's time to provide production builds, the result would be a clean installation awaiting first time configuration post image flash. E.g. An engineer would develop an application to the point of production release using `iotc-demo-dev`. The application that's released to production is built using the `iotc-demo` recipe. Hence there could be a high number (100?) of "blank" devices containing all the binaries necessary to perform just requiring provisioning with the config.jsons.
 
 By adding the recipe to your image (e.g. `IMAGE_INSTALL += " iotc-demo-dev"` in `conf/local.conf`) you will via dependency include `iotc-python-sdk` from `meta-iotc-python-sdk`
 
@@ -32,10 +38,9 @@ meta-my-iotc-python-sdk-example/
 └── recipes-apps
     └── iotc-telemetry-and-commands-demo        <--------- Recipe directory
         ├── files
-        │   ├── eg-private-repo-data            <--------- Location for config data for development purposes.
+        │   ├── eg-private-repo-data            <--------- Location for config & certificate data for development purposes.
         │   │   ├── configSymmrcKy.json
         │   │   └── configX509.json
-        │   ├── certs                           <--------- Location for authentication certificates (X509)
         │   ├── model                           <--------- Directory of support sources
         │   │   ├── device_model.py
         │   │   ├── enums.py
@@ -48,10 +53,6 @@ meta-my-iotc-python-sdk-example/
         │   └── iotc-demo.py                    <--------- Top level python source.
         └── iotc-demo_git.bb                    <--------- Recipe
 ```
-
-As developing a iotc application involves the use of private/secure data like keys/certificates and the user is expected to develop same application using SCM like git, it's worth taking a moment to be aware of risks of accidentally uploading private data to places it should not belong. The directory `eg-private-repo-data` seeks to provide a safe space to place sensitive data like device keys etc for development purposes only. When the user installs the _development_ version of the recipe (e.g. `IMAGE_INSTALL += " iotc-demo-dev"` in `conf/local.conf`) any files within `eg-private-repo-data` will be installed in the rootfs of the image. The `.gitignore` settings for this repo are also configured to prevent accidental upload of *.pem or *.crt files.
-
-This approach allows the user to develop their solution conveniently, then when it's time to provide production builds, the result would be a clean installation awaiting first time configuration post image flash.
 
 ## Commands
 This demo supports commands to be sent from iotconnect.io to the device, both plain bash commands and commands execute through bash scripts are supported.

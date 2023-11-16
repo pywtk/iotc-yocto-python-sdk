@@ -7,7 +7,6 @@ SRC_URI = "file://iotc-demo.py \
     file://model \
     file://eg-private-repo-data \
     file://scripts \
-    file://certs \
 "
 
 APP_INSTALL_DIR = "${base_prefix}/usr/bin/local/iotc"
@@ -39,29 +38,13 @@ do_install() {
         fi
     done
 
-    # Add certs folder
-    for f in ${WORKDIR}/certs/*
-    do
-        if [ -f $f ]; then
-            if [ ! -d ${D}${APP_INSTALL_DIR}/certs ]; then
-                install -d ${D}${APP_INSTALL_DIR}/certs
-            fi
-            install -m 0755 $f ${D}${APP_INSTALL_DIR}/certs/
-        fi
-    done
-
     # Install main app
     install -m 0755 ${WORKDIR}/iotc-demo.py ${D}${APP_INSTALL_DIR}/
 
-    for f in ${WORKDIR}/eg-private-repo-data/*
-    do
-        if [ -f $f ]; then
-            if [ ! -d ${D}${PRIVATE_DATA_DIR} ]; then
-                install -d ${D}${PRIVATE_DATA_DIR}
-            fi
-            install -m 0755 $f ${D}${PRIVATE_DATA_DIR}/
-        fi
-    done
+    if [ ! -d ${D}${PRIVATE_DATA_DIR} ]; then
+        install -d ${D}${PRIVATE_DATA_DIR}
+    fi
+    cp -R --no-preserve=ownership ${WORKDIR}/eg-private-repo-data/* ${D}${PRIVATE_DATA_DIR}/
 
     # Add dummy sensor files
     echo 1 > ${D}${APP_INSTALL_DIR}/dummy_sensor_power
