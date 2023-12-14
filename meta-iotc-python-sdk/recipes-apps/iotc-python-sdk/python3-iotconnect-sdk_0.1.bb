@@ -26,7 +26,7 @@ inherit setuptools3
 
 RDEPENDS_${PN} += " python3-ntplib"
 RDEPENDS_${PN} += " python3-paho-mqtt"
-RDEPENDS_${PN} += " jsonlib-python3"
+RDEPENDS_${PN} += " python3-jsonlib"
 RDEPENDS_${PN} += " python3-pip"
 
 do_configure () {

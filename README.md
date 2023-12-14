@@ -15,8 +15,8 @@ meta-iotc-python-sdk/
 │   └── layer.conf
 └── recipes-apps
     └── iotc-python-sdk
-        ├── iotc-python-sdk_0.1.bb
-        └── jsonlib-python3_1.6.1.bb
+        ├── python3-iotconnect-sdk_0.1.bb
+        └── python3-jsonlib_1.6.1.bb
 ```
 
 ### `meta-my-iotc-python-sdk-example`
