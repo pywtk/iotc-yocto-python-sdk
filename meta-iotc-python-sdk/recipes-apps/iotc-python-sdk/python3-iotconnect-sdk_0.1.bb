@@ -12,11 +12,11 @@
 LICENSE = "GPL-3.0-only"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/GPL-3.0-only;md5=c79ff39f19dfec6d293b95dea7b07891"
 
-SRC_URI = "git://git@github.com/avnet-iotconnect/iotc-python-sdk.git;protocol=ssh;branch=master-std-21"
+SRC_URI = "git://git@github.com/avnet-iotconnect/iotc-python-sdk.git;protocol=ssh;branch=remove-jsonlib"
 
 # Modify these as desired
 PV = "1.0+git${SRCPV}"
-SRCREV = "083e0b74390775e12295fe7703c056ba10bdef90"
+SRCREV = "b521b5a1a5a31bd597e5930599c7e779ae915ab5"
 
 S = "${WORKDIR}/git/iotconnect-sdk-1.0"
 DISTUTILS_SETUP_PATH = "${WORKDIR}/git/iotconnect-sdk-1.0"
@@ -26,7 +26,6 @@ inherit setuptools3
 
 #RDEPENDS:${PN} += " python3-ntplib"
 #RDEPENDS:${PN} += " python3-paho-mqtt"
-#RDEPENDS:${PN} += " jsonlib-python3"
 #RDEPENDS:${PN} += " python3-pip"
 
 RDEPENDS:${PN} += " \

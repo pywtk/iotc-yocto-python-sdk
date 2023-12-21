@@ -1,10 +1,11 @@
 LICENSE = "GPL-3.0-only"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/GPL-3.0-only;md5=c79ff39f19dfec6d293b95dea7b07891"
 
-RDEPENDS:${PN} += "bash"
+RDEPENDS:${PN} += " bash"
 
-RDEPENDS:${PN} += "iotc-python-sdk"
-RDEPENDS:${PN} += "python3-pip"
+RDEPENDS:${PN} += " python3-pip"
+
+RDEPENDS_${PN} += " python3-iotconnect-sdk"
 
 RDEPENDS:${PN} += " python3-cachetools"               
 RDEPENDS:${PN} += " python3-certifi"                  
