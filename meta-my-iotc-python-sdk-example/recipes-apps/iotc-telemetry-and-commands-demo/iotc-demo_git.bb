@@ -1,7 +1,7 @@
 LICENSE = "GPL-3.0"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/GPL-3.0;md5=c79ff39f19dfec6d293b95dea7b07891"
 
-RDEPENDS_${PN} = "iotc-python-sdk bash"
+RDEPENDS:${PN} = "iotc-python-sdk bash"
 
 SRC_URI = "file://iotc-demo.py \
     file://model \
@@ -12,7 +12,7 @@ SRC_URI = "file://iotc-demo.py \
 APP_INSTALL_DIR = "${base_prefix}/usr/bin/local/iotc"
 PRIVATE_DATA_DIR = "${base_prefix}/usr/local/iotc"
 
-FILES_${PN}-dev = "${PRIVATE_DATA_DIR}/* \
+FILES:${PN}-dev = "${PRIVATE_DATA_DIR}/* \
 "
 
 do_install() {
@@ -56,13 +56,13 @@ do_install() {
 
 inherit systemd
 SYSTEMD_AUTO_ENABLE = "disable"
-SYSTEMD_SERVICE_${PN} = "iotc-demo.service"
+SYSTEMD_SERVICE:${PN} = "iotc-demo.service"
 
-SRC_URI_append = " file://iotc-demo.service "
-FILES_${PN} += "${systemd_unitdir}/system/iotc-demo.service"
+SRC_URI += " file://iotc-demo.service "
+FILES:${PN} += "${systemd_unitdir}/system/iotc-demo.service"
 
 HAS_SYSTEMD = "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}"
-do_install_append() {
+do_install:append() {
     if ${HAS_SYSTEMD}; then
         install -d ${D}/${systemd_unitdir}/system
         install -m 0644 ${WORKDIR}/iotc-demo.service ${D}/${systemd_unitdir}/system

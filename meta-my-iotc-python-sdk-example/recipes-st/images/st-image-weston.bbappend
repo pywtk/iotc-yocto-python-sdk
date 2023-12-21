@@ -3,5 +3,5 @@
 SUMMARY = "Recipe to add iotconnect"
 
 CORE_IMAGE_EXTRA_INSTALL += " \
-    iotc-demo-dev \
+    lora \
     "
