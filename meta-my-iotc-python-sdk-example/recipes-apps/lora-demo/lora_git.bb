@@ -5,7 +5,7 @@ RDEPENDS:${PN} += " bash"
 
 RDEPENDS:${PN} += " python3-pip"
 
-RDEPENDS_${PN} += " python3-iotconnect-sdk"
+RDEPENDS:${PN} += " python3-iotconnect-sdk"
 
 RDEPENDS:${PN} += " python3-cachetools"               
 RDEPENDS:${PN} += " python3-certifi"                  
